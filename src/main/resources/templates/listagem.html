@@ -13,5 +13,26 @@
         </nav>
                 <h1>Listagem de pilotos!</h1> 
                 <p>Veja nossos pilotos!</p> 
+                <table class='table'> 
+                        <thead> 
+                            <tr> 
+                                <th>ID</th> 
+                                <th>Nome</th> 
+                                <th>Equipe</th>
+                            <th>Status</th>
+                            </tr> 
+                        </thead> 
+                        <tbody> 
+                            <tr th:each="piloto : ${pilotos}"> 
+                                <td th:text="${piloto.id}"></td> 
+                                <td th:text="${piloto.nome}"></td> 
+                                <td th:text="${piloto.equipe}"></td> 
+                            <td>
+                                <span th:if="${piloto.status}" class="badge bg-success">Apto</span>
+                                <span th:unless="${piloto.status}" class="badge bg-warning">Não apto</span>
+                            </td>
+                            </tr> 
+                        </tbody> 
+                    </table> 
             </body> 
 </html> 

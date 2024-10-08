@@ -14,7 +14,7 @@
               <img th:src="@{/images/kart.jpg}" width="300" height="200">
                 <h1>Tela de cadastro de pilotos!</h1> 
                 <p>Informe os dados solicitados!</p> 
-              <form th:action="@{/cadastro}" method="POST" th:object="${piloto}"> 
+              <form th:action="@{/guardar-piloto}" method="POST" th:object="${piloto}"> 
                             <p>Nome: <input type="text" th:field="${piloto.nome}" /> </p> 
                             <p>Equipe: <input type="text" th:field="${piloto.equipe}" /></p> 
                             <p><input type="submit" value="Cadastrar" /></p> 
