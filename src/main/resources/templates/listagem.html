@@ -20,6 +20,7 @@
                                 <th>Nome</th> 
                                 <th>Equipe</th>
                             <th>Status</th>
+                            <th>Ação</th>
                             </tr> 
                         </thead> 
                         <tbody> 
@@ -31,6 +32,7 @@
                                 <span th:if="${piloto.status}" class="badge bg-success">Apto</span>
                                 <span th:unless="${piloto.status}" class="badge bg-warning">Não apto</span>
                             </td>
+                <td><a th:href="@{/exibir(id=${piloto.id})}">+ Detalhes</a></td>
                             </tr> 
                         </tbody> 
                     </table> 
