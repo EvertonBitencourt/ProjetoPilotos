@@ -1,7 +1,9 @@
 
 package com.senacead.pilotos.controller;
 
+import com.senacead.pilotos.model.Piloto;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
@@ -18,7 +20,13 @@ public class PilotoController {
     }
     
     @GetMapping("/cadastro")
-    public String cadastro(){
+    public String cadastro(Model model){
+        model.addAttribute("piloto", new Piloto());
         return "cadastro";
+    }
+    
+    @GetMapping("/listagem")
+    public String listar(){
+        return "listagem";
     }
 }
