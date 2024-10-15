@@ -1,5 +1,6 @@
 package com.senacead.pilotos.controller;
 
+import com.senacead.pilotos.model.Avaliacoes;
 import com.senacead.pilotos.model.Piloto;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class PilotoController {
 
     private List<Piloto> listaPilotos = new ArrayList();
-
+    private List<Avaliacoes> listaAvaliacao = new ArrayList<>();
+    
     @GetMapping("/")
     public String inicio() {
         return "index";
@@ -65,7 +67,17 @@ public class PilotoController {
                 break;
             }
         }
+        //Avaliacoes avaliacaoEncontrada = new Avaliacoes();
+	List<Avaliacoes> avaliacaoEncontrada = new ArrayList<>();
+        for(Avaliacoes a : listaAvaliacao){
+            if(a.getPiloto().getId() == idPiloto){
+			avaliacaoEncontrada.add(a);
+			
+		}
+	}
         model.addAttribute("piloto", pilotoEncontrado); // adicionar o objeto encontrado
+        model.addAttribute("avaliacoes", avaliacaoEncontrada);
+        model.addAttribute("avaliacao", new Avaliacoes());
         return "detalhes";
     }
 
@@ -97,5 +109,26 @@ public class PilotoController {
         model.addAttribute("piloto", pilotoEncontrado);
         return "cadastro";
     }
-
+    
+    @PostMapping("/guardar-avaliacao")
+    public String processarform(Model model, @ModelAttribute Piloto piloto, @ModelAttribute Avaliacoes avaliacao) {
+        
+        avaliacao.setId(listaAvaliacao.size()+1);
+        avaliacao.setPiloto(piloto);
+        listaAvaliacao.add(avaliacao);
+        return "redirect:/listagem";
+    }
+    
+    @GetMapping("/excluir-avaliacao")
+    public String excluirAvaliacao(Model model, @RequestParam String id) {
+        Integer idComentario = Integer.parseInt(id); // converter o string
+        
+        for (Avaliacoes aval : listaAvaliacao) {
+            if (aval.getId() == idComentario) {
+                listaAvaliacao.remove(aval);
+                break;
+            }
+        }
+        return "redirect:/listagem";
+    }
 }
