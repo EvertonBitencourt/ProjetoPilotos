@@ -33,9 +33,19 @@ public class PilotoController {
 
     @PostMapping("/guardar-piloto")
     public String processarformulario(Model model, @ModelAttribute Piloto piloto) {
-        piloto.setId(listaPilotos.size() + 1);
-        piloto.setStatus(true);
-        listaPilotos.add(piloto);
+        if (piloto.getId() != null) {
+            for (Piloto p : listaPilotos) {
+                if (p.getId() == piloto.getId()) {
+                    p.setNome(piloto.getNome());
+                    p.setEquipe(piloto.getEquipe());
+                    break;
+                }
+            }
+        } else {
+            piloto.setId(listaPilotos.size() + 1);
+            piloto.setStatus(true);
+            listaPilotos.add(piloto);
+        }
         return "redirect:/listagem";
     }
 
@@ -54,8 +64,38 @@ public class PilotoController {
                 pilotoEncontrado = p;
                 break;
             }
-        } 
+        }
         model.addAttribute("piloto", pilotoEncontrado); // adicionar o objeto encontrado
         return "detalhes";
     }
+
+    @GetMapping("/excluir-piloto")
+    public String excluirPiloto(Model model, @RequestParam String id) {
+        Integer idPiloto = Integer.parseInt(id); // converter o string
+        Piloto pilotoEncontrado = new Piloto(); // criar o objeto
+        for (Piloto p : listaPilotos) {
+            if (p.getId() == idPiloto) {
+                pilotoEncontrado = p;
+                break;
+            }
+        }
+
+        listaPilotos.remove(pilotoEncontrado);
+        return "redirect:/listagem";
+    }
+
+    @GetMapping("/alterar-piloto")
+    public String alterarPiloto(Model model, @RequestParam String id) {
+        Integer idPiloto = Integer.parseInt(id); // converter o string
+        Piloto pilotoEncontrado = new Piloto(); // criar o objeto
+        for (Piloto p : listaPilotos) {
+            if (p.getId() == idPiloto) {
+                pilotoEncontrado = p;
+                break;
+            }
+        }
+        model.addAttribute("piloto", pilotoEncontrado);
+        return "cadastro";
+    }
+
 }

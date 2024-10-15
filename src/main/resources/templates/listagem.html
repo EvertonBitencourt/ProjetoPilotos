@@ -32,7 +32,11 @@
                                 <span th:if="${piloto.status}" class="badge bg-success">Apto</span>
                                 <span th:unless="${piloto.status}" class="badge bg-warning">Não apto</span>
                             </td>
-                <td><a th:href="@{/exibir(id=${piloto.id})}">+ Detalhes</a></td>
+                <td>
+                    <a th:href="@{/exibir(id=${piloto.id})}">+ Detalhes</a>
+                    <a th:href="@{/alterar-piloto(id=${piloto.id})}">Alterar</a>
+                    <a th:href="@{/excluir-piloto(id=${piloto.id})}">Excluir</a>
+                </td>
                             </tr> 
                         </tbody> 
                     </table> 
