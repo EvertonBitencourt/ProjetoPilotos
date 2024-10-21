@@ -1,6 +1,7 @@
 package com.senacead.pilotos.controller;
 
 import com.senacead.pilotos.model.Avaliacoes;
+import com.senacead.pilotos.model.ListaDados;
 import com.senacead.pilotos.model.Piloto;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class PilotoController {
 
-    private List<Piloto> listaPilotos = new ArrayList();
-    private List<Avaliacoes> listaAvaliacao = new ArrayList<>();
+    
     
     @GetMapping("/")
     public String inicio() {
@@ -25,7 +25,7 @@ public class PilotoController {
     @GetMapping("/tela-inicio")
     public String inicio2() {
         return "index";
-    }
+    } 
 
     @GetMapping("/cadastro")
     public String cadastro(Model model) {
@@ -36,24 +36,16 @@ public class PilotoController {
     @PostMapping("/guardar-piloto")
     public String processarformulario(Model model, @ModelAttribute Piloto piloto) {
         if (piloto.getId() != null) {
-            for (Piloto p : listaPilotos) {
-                if (p.getId() == piloto.getId()) {
-                    p.setNome(piloto.getNome());
-                    p.setEquipe(piloto.getEquipe());
-                    break;
-                }
-            }
+            ListaDados.atualizarPiloto(piloto);
         } else {
-            piloto.setId(listaPilotos.size() + 1);
-            piloto.setStatus(true);
-            listaPilotos.add(piloto);
+            ListaDados.adicionarPiloto(piloto);
         }
         return "redirect:/listagem";
     }
 
     @GetMapping("/listagem")
     public String listar(Model model) {
-        model.addAttribute("pilotos", listaPilotos);
+        model.addAttribute("pilotos", ListaDados.listarPilotos());
         return "listagem";
     }
 
@@ -61,20 +53,10 @@ public class PilotoController {
     public String mostrarDetalhesPiloto(Model model, @RequestParam String id) {
         Integer idPiloto = Integer.parseInt(id); // converter o string
         Piloto pilotoEncontrado = new Piloto(); // criar o objeto
-        for (Piloto p : listaPilotos) {
-            if (p.getId() == idPiloto) {
-                pilotoEncontrado = p;
-                break;
-            }
-        }
-        //Avaliacoes avaliacaoEncontrada = new Avaliacoes();
-	List<Avaliacoes> avaliacaoEncontrada = new ArrayList<>();
-        for(Avaliacoes a : listaAvaliacao){
-            if(a.getPiloto().getId() == idPiloto){
-			avaliacaoEncontrada.add(a);
-			
-		}
-	}
+        pilotoEncontrado = ListaDados.obtemPiloto(idPiloto);
+        
+        List<Avaliacoes> avaliacaoEncontrada = new ArrayList();
+	avaliacaoEncontrada = ListaDados.listaAvaliacoes(idPiloto);
         model.addAttribute("piloto", pilotoEncontrado); // adicionar o objeto encontrado
         model.addAttribute("avaliacoes", avaliacaoEncontrada);
         model.addAttribute("avaliacao", new Avaliacoes());
@@ -84,51 +66,17 @@ public class PilotoController {
     @GetMapping("/excluir-piloto")
     public String excluirPiloto(Model model, @RequestParam String id) {
         Integer idPiloto = Integer.parseInt(id); // converter o string
-        Piloto pilotoEncontrado = new Piloto(); // criar o objeto
-        for (Piloto p : listaPilotos) {
-            if (p.getId() == idPiloto) {
-                pilotoEncontrado = p;
-                break;
-            }
-        }
-
-        listaPilotos.remove(pilotoEncontrado);
+        ListaDados.excluirPiloto(idPiloto);
         return "redirect:/listagem";
     }
 
     @GetMapping("/alterar-piloto")
     public String alterarPiloto(Model model, @RequestParam String id) {
         Integer idPiloto = Integer.parseInt(id); // converter o string
-        Piloto pilotoEncontrado = new Piloto(); // criar o objeto
-        for (Piloto p : listaPilotos) {
-            if (p.getId() == idPiloto) {
-                pilotoEncontrado = p;
-                break;
-            }
-        }
-        model.addAttribute("piloto", pilotoEncontrado);
+        
+        model.addAttribute("piloto", ListaDados.obtemPiloto(idPiloto));
         return "cadastro";
     }
     
-    @PostMapping("/guardar-avaliacao")
-    public String processarform(Model model, @ModelAttribute Piloto piloto, @ModelAttribute Avaliacoes avaliacao) {
-        
-        avaliacao.setId(listaAvaliacao.size()+1);
-        avaliacao.setPiloto(piloto);
-        listaAvaliacao.add(avaliacao);
-        return "redirect:/listagem";
-    }
     
-    @GetMapping("/excluir-avaliacao")
-    public String excluirAvaliacao(Model model, @RequestParam String id) {
-        Integer idComentario = Integer.parseInt(id); // converter o string
-        
-        for (Avaliacoes aval : listaAvaliacao) {
-            if (aval.getId() == idComentario) {
-                listaAvaliacao.remove(aval);
-                break;
-            }
-        }
-        return "redirect:/listagem";
-    }
 }
