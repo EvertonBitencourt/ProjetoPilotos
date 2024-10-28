@@ -22,7 +22,7 @@ public class Avaliacoes {
         @GeneratedValue (strategy = GenerationType.AUTO)
         private Integer id;
         @ManyToOne
-        @JoinColumn(name = "id_livro")
+        @JoinColumn(name = "id_avaliacoes")
 	private Piloto piloto;
 	private String avaliacao;
 }

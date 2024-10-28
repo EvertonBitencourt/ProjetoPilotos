@@ -32,13 +32,13 @@ public class PilotoAPIController {
         return new ResponseEntity<>(novoPiloto, HttpStatus.CREATED);
     }
     
-    @GetMapping("buscar/{id}")
+    @GetMapping("/buscar/{id}")
     public ResponseEntity<Piloto> pesquisar (@PathVariable Integer id){
         Piloto pilitoEncontrado = pilotoService.buscarPorId(id);
         return new ResponseEntity<>(pilitoEncontrado, HttpStatus.OK);
     }
     
-    @GetMapping("listar-todos")
+    @GetMapping("/listar-todos")
     public ResponseEntity<List> listar (){
         List <Piloto> pilotoL = pilotoService.listarTodos();
         return new ResponseEntity<>(pilotoL, HttpStatus.OK);

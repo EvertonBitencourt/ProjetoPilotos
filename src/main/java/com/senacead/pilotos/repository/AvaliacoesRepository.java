@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AvaliacoesRepository extends JpaRepository<Avaliacoes, Integer>{
-    List<Avaliacoes> findByAvaliacoes(Integer id);
+    List<Avaliacoes> findByPilotoId(Integer id);
 }

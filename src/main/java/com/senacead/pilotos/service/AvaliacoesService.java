@@ -33,4 +33,8 @@ public class AvaliacoesService {
         avaliacoesRepository.save(avaliacoes);
         return avaliacoes;
     }
+    
+    public List<Avaliacoes> buscarPorIdPiloto(Integer id){
+        return avaliacoesRepository.findByPilotoId(id);
+    }
 }
