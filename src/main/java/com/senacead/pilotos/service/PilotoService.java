@@ -32,7 +32,6 @@ public class PilotoService {
 
     public Piloto atualizar(Integer id, Piloto piloto) {
         Piloto pilotoEncontrado = buscarPorId(id);
-
         pilotoEncontrado.setNome(piloto.getNome());
         pilotoEncontrado.setEquipe(piloto.getEquipe());
         pilotoRepository.save(pilotoEncontrado);
