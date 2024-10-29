@@ -3,8 +3,11 @@ package com.senacead.pilotos.controller;
 import com.senacead.pilotos.model.Avaliacoes;
 import com.senacead.pilotos.model.ListaDados;
 import com.senacead.pilotos.model.Piloto;
+import com.senacead.pilotos.service.AvaliacoesService;
+import com.senacead.pilotos.service.PilotoService;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class PilotoController {
 
+    @Autowired
+    PilotoService pilotoService;
     
+    @Autowired
+    AvaliacoesService avaliacoesService;
     
     @GetMapping("/")
     public String inicio() {
@@ -36,16 +43,16 @@ public class PilotoController {
     @PostMapping("/guardar-piloto")
     public String processarformulario(Model model, @ModelAttribute Piloto piloto) {
         if (piloto.getId() != null) {
-            ListaDados.atualizarPiloto(piloto);
+            pilotoService.atualizar(piloto.getId(), piloto);
         } else {
-            ListaDados.adicionarPiloto(piloto);
+            pilotoService.criarPiloto(piloto);
         }
         return "redirect:/listagem";
     }
 
     @GetMapping("/listagem")
     public String listar(Model model) {
-        model.addAttribute("pilotos", ListaDados.listarPilotos());
+        model.addAttribute("pilotos", pilotoService.listarTodos());
         return "listagem";
     }
 
@@ -53,10 +60,9 @@ public class PilotoController {
     public String mostrarDetalhesPiloto(Model model, @RequestParam String id) {
         Integer idPiloto = Integer.parseInt(id); // converter o string
         Piloto pilotoEncontrado = new Piloto(); // criar o objeto
-        pilotoEncontrado = ListaDados.obtemPiloto(idPiloto);
-        
+        pilotoEncontrado = pilotoService.buscarPorId(idPiloto);    
         List<Avaliacoes> avaliacaoEncontrada = new ArrayList();
-	avaliacaoEncontrada = ListaDados.listaAvaliacoes(idPiloto);
+	avaliacaoEncontrada = avaliacoesService.buscarPorIdPiloto(idPiloto);
         model.addAttribute("piloto", pilotoEncontrado); // adicionar o objeto encontrado
         model.addAttribute("avaliacoes", avaliacaoEncontrada);
         model.addAttribute("avaliacao", new Avaliacoes());
@@ -66,7 +72,7 @@ public class PilotoController {
     @GetMapping("/excluir-piloto")
     public String excluirPiloto(Model model, @RequestParam String id) {
         Integer idPiloto = Integer.parseInt(id); // converter o string
-        ListaDados.excluirPiloto(idPiloto);
+        pilotoService.excluir(idPiloto);
         return "redirect:/listagem";
     }
 
@@ -74,9 +80,8 @@ public class PilotoController {
     public String alterarPiloto(Model model, @RequestParam String id) {
         Integer idPiloto = Integer.parseInt(id); // converter o string
         
-        model.addAttribute("piloto", ListaDados.obtemPiloto(idPiloto));
+        model.addAttribute("piloto", pilotoService.buscarPorId(idPiloto));
         return "cadastro";
     }
-    
     
 }
